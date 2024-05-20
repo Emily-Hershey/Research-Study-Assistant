@@ -1,1 +1,23 @@
+import serpapi
+import os
 
+from dotenv import load_dotenv
+
+api_key = os.getenv('SERPAPI_KEY')
+client = serpapi.Client(api_key=api_key)
+
+result = client.search(
+    q="coffee",
+    engine="google",
+    location="Austin,Texas",
+    hl="en",
+    gl="us"
+)
+
+print(result["organic_results"])
+
+for item in result["organic_results"]:
+    print(item['title'])
+    print(item['link'])
+    print(item['snippet'])
+    print('-----------------')
