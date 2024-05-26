@@ -1,5 +1,8 @@
 import serpapi
 import os
+import pandas as pd
+import requests 
+from bs4 import BeautifulSoup 
 
 from dotenv import load_dotenv
 
@@ -11,13 +14,35 @@ result = client.search(
     engine="google",
     location="Austin,Texas",
     hl="en",
-    gl="us"
+    gl="us",
 )
 
-print(result["organic_results"])
+for item in result["organic_results"]:
+    URL = item['link'] 
+    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"} 
+    # Here the user agent is for Edge browser on windows 10. You can find your browser user agent from the above given link. 
+    r = requests.get(url=URL, headers=headers) 
+    soup = BeautifulSoup(r.content, 'html5lib') # If this line causes an error, run 'pip install html5lib' or install html5lib 
+    print(soup.prettify()) 
+    # print(r.content) 
+
+
+'''print(result["organic_results"])
 
 for item in result["organic_results"]:
     print(item['title'])
     print(item['link'])
     print(item['snippet'])
     print('-----------------')
+'''
+
+'''df = pd.DataFrame(result["organic_results"])
+print(df)
+
+from sklearn.model_selection import train_test_split
+
+y = df.pop('df[df['snippit']]')
+X = df
+
+X_train,X_test,y_train,y_test = train_test_split(X.index,y,test_size=0.2)
+X.iloc[X_train] # return dataframe train'''
