@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import requests 
 from bs4 import BeautifulSoup 
+from scrapy.crawler import CrawlerProcess
+from web_scrapy.web_scrapy.spiders.spider1 import Spider1  # Replace with the actual import path to your spider
 
 from dotenv import load_dotenv
 
@@ -17,7 +19,24 @@ result = client.search(
     gl="us",
 )
 
+url_list = []
 for item in result["organic_results"]:
+    URL = item['link'] 
+    url_list.append(URL)
+def run_spider():
+    # Create a CrawlerProcess instance
+    process = CrawlerProcess()
+
+    # Add the Spider1 spider to the process
+    process.crawl(Spider1, start_urls=url_list)
+
+    # Start the crawling process
+    process.start()
+
+if __name__ == "__main__":
+    run_spider()
+
+'''for item in result["organic_results"]:
     URL = item['link'] 
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"} 
     # Here the user agent is for Edge browser on windows 10. You can find your browser user agent from the above given link. 
@@ -25,6 +44,7 @@ for item in result["organic_results"]:
     soup = BeautifulSoup(r.content, 'html5lib') # If this line causes an error, run 'pip install html5lib' or install html5lib 
     print(soup.prettify()) 
     # print(r.content) 
+'''
 
 
 '''print(result["organic_results"])
