@@ -2,25 +2,24 @@ import serpapi
 import os
 import pandas as pd
 import requests 
+import json
 from bs4 import BeautifulSoup 
 from scrapy.crawler import CrawlerProcess
 from web_scrapy.web_scrapy.spiders.spider1 import Spider1  # Replace with the actual import path to your spider
 
 from dotenv import load_dotenv
 
-api_key = os.getenv('SERPAPI_KEY')
-client = serpapi.Client(api_key=api_key)
+params = {
+    'api_key':'C7568B51036E41BCB8D7C4FCBD3D27F7',
+    'q':'American Revolution',
+    'engine':'google',
+    'hl':'en',
+}
 
-result = client.search(
-    q="coffee",
-    engine="google",
-    location="Austin,Texas",
-    hl="en",
-    gl="us",
-)
-
+api_result = requests.get('https://api.scaleserp.com/search', params)
+response_data = api_result.json()
 url_list = []
-for item in result["organic_results"]:
+for item in response_data["organic_results"]:
     URL = item['link'] 
     url_list.append(URL)
 def run_spider():
@@ -35,34 +34,3 @@ def run_spider():
 
 if __name__ == "__main__":
     run_spider()
-
-'''for item in result["organic_results"]:
-    URL = item['link'] 
-    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"} 
-    # Here the user agent is for Edge browser on windows 10. You can find your browser user agent from the above given link. 
-    r = requests.get(url=URL, headers=headers) 
-    soup = BeautifulSoup(r.content, 'html5lib') # If this line causes an error, run 'pip install html5lib' or install html5lib 
-    print(soup.prettify()) 
-    # print(r.content) 
-'''
-
-
-'''print(result["organic_results"])
-
-for item in result["organic_results"]:
-    print(item['title'])
-    print(item['link'])
-    print(item['snippet'])
-    print('-----------------')
-'''
-
-'''df = pd.DataFrame(result["organic_results"])
-print(df)
-
-from sklearn.model_selection import train_test_split
-
-y = df.pop('df[df['snippit']]')
-X = df
-
-X_train,X_test,y_train,y_test = train_test_split(X.index,y,test_size=0.2)
-X.iloc[X_train] # return dataframe train'''
