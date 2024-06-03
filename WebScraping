@@ -15,13 +15,16 @@ params = {
     'engine':'google',
     'hl':'en',
 }
-
+'''
 api_result = requests.get('https://api.scaleserp.com/search', params)
 response_data = api_result.json()
 url_list = []
 for item in response_data["organic_results"]:
     URL = item['link'] 
     url_list.append(URL)
+'''
+url_list = []
+url_list.append("https://en.wikipedia.org/wiki/American_Revolution")
 def run_spider():
     # Create a CrawlerProcess instance
     process = CrawlerProcess()
