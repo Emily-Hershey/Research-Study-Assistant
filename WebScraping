@@ -8,6 +8,9 @@ from scrapy.crawler import CrawlerProcess
 from web_scrapy.web_scrapy.spiders.spider1 import Spider1  # Replace with the actual import path to your spider
 
 from dotenv import load_dotenv
+import sqlite3
+
+from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 
 params = {
     'api_key':'C7568B51036E41BCB8D7C4FCBD3D27F7',
@@ -37,3 +40,26 @@ def run_spider():
 
 if __name__ == "__main__":
     run_spider()
+
+
+def run_model_on_data():
+    conn = sqlite3.connect('example.db')  # Connect to the same database
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM websites')
+    rows = cursor.fetchall()
+    
+
+    model_name = "deepset/tinyroberta-squad2"
+
+    # a) Get predictions
+    nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
+    QA_input = {
+        'question': 'Who was Patrick Henry?',
+        'context': rows[0][1]
+    }
+    res = nlp(QA_input)
+    print(res) 
+    
+    conn.close()
+    
+run_model_on_data()
