@@ -37,6 +37,9 @@ class Spider1(scrapy.Spider):
         rows = cursor.fetchall()
         for row in rows:
             print(row)
+
+
+        
         conn.close()
 
 
