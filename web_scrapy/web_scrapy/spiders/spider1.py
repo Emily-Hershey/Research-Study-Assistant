@@ -36,10 +36,7 @@ class Spider1(scrapy.Spider):
         cursor.execute('SELECT * FROM websites')
         rows = cursor.fetchall()
         for row in rows:
-            print(row)
-
-
-        
+            #print(row)
         conn.close()
 
 

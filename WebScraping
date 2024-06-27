@@ -10,7 +10,13 @@ from web_scrapy.web_scrapy.spiders.spider1 import Spider1  # Replace with the ac
 from dotenv import load_dotenv
 import sqlite3
 
+#for summarizing model
+import torch
+from transformers import pipeline 
+
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
+
+
 
 params = {
     'api_key':'C7568B51036E41BCB8D7C4FCBD3D27F7',
@@ -34,6 +40,19 @@ def run_spider():
 if __name__ == "__main__":
     run_spider()
 
+def summarize_source():
+    conn = sqlite3.connect('example.db')  # Connect to the same database
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM websites')
+    rows = cursor.fetchall()
+
+    summarizer = pipeline(
+        "summarization",
+        "pszemraj/long-t5-tglobal-base-16384-book-summary",
+        device=0 if torch.cuda.is_available() else -1,
+    )
+    result = summarizer(rows[0][1])
+    print(result[0]["summary_text"])
 
 def run_model_on_data():
     conn = sqlite3.connect('example.db')  # Connect to the same database
@@ -51,8 +70,6 @@ def run_model_on_data():
         'context': rows[0][1]
     }
     res = nlp(QA_input)
-    print(res) 
     
     conn.close()
     
-run_model_on_data()
