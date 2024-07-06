@@ -12,6 +12,10 @@ BOT_NAME = "web_scrapy"
 SPIDER_MODULES = ["web_scrapy.spiders"]
 NEWSPIDER_MODULE = "web_scrapy.spiders"
 
+# Enable pipeline to Flask app
+ITEM_PIPELINES = {
+   'web_scrapy.pipelines.WebScrapyPipeline': 300,
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "web_scrapy (+http://www.yourdomain.com)"

@@ -32,7 +32,7 @@ def run_spider():
     process = CrawlerProcess()
 
     # Add the Spider1 spider to the process
-    process.crawl(Spider1, start_urls=url_list)
+    process.crawl(Spider1, start_urls=url_list, topic="placeholder")
 
     # Start the crawling process
     process.start()
@@ -40,8 +40,11 @@ def run_spider():
 if __name__ == "__main__":
     run_spider()
 
-def summarize_source():
-    conn = sqlite3.connect('example.db')  # Connect to the same database
+#def scrape_summary():
+
+
+def ai_summary():
+    conn = sqlite3.connect('database.db')  # Connect to the same database
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM websites')
     rows = cursor.fetchall()
@@ -55,7 +58,7 @@ def summarize_source():
     print(result[0]["summary_text"])
 
 def run_model_on_data():
-    conn = sqlite3.connect('example.db')  # Connect to the same database
+    conn = sqlite3.connect('database.db')  # Connect to the same database
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM websites')
     rows = cursor.fetchall()

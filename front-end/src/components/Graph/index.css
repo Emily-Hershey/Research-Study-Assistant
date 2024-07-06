@@ -1,26 +1,65 @@
 .graph {
-    margin-top: 20px;
-    width: 100%;
-    height: 300px;
-    background-color: #fff;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #80ffa2;
-  }
-  .columns {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-  }
-  
-  .column {
-    background-color: #61dafb;
-    color: #fff;
-    padding: 10px;
-    margin: 5px;
-    flex: 1;
-    text-align: center;
-    border-radius: 4px;
-  }
+  margin-top: 20px;
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  border-radius: 4px;
+  display: grid;
+  grid-auto-flow: column; /* Ensure grid items flow in columns */
+  gap: 10px; /* Adjust gap between columns */
+}
+
+.graph table {
+  grid-auto-flow: column; /* Ensure grid items flow in columns */
+  display: contents; /* Makes the table's children (thead, tbody, etc.) direct children of the grid */
+}
+
+.graph thead,
+.graph tbody {
+  display: contents; /* Prevent default table behavior */
+}
+
+
+.graph th,
+.graph td {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #ffffff;
+  border-bottom-color: black;
+  border-top-color: black;
+
+  text-align: center;
+
+}
+
+.graph th{
+  width: 100px;
+}
+
+.graph td {
+  width: 200px;
+}
+
+/* Custom heights for different columns */
+.col-topic {
+  height: 50px;
+}
+
+.col-link {
+  height: 50px;
+}
+
+.col-summary {
+  height: 250px;
+}
+
+.graph thead th {
+  background-color: #fba9f7;
+  color: white;
+}
+
+.graph tbody td {
+  background-color: #FFDEFD;
+  color: #5a1e58;
+}

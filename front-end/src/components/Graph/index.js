@@ -1,21 +1,29 @@
 import React from 'react';
 import './index.css';
 
-function Graph({ num_columns }) {
-  const columns = Array.from({ length: num_columns }, (_, index) => (
-    <div key={index} className="column">
-      Column {index + 1}
-    </div>
-  ));
-
+const sourceGraph = ({sources}) => {
   return (
     <div className="graph">
-      <h2>Graph with {num_columns} columns</h2>
-      <div className="columns">
-        {columns}
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th className={'col-topic'}>Topic</th>
+            <th className={'col-link'}>Link</th>
+            <th className={'col-summary'}>Summary</th>
+          </tr>
+        </thead>    
+        <tbody>
+          {sources.map((source) => (
+            <tr key = {source.id}>
+              <td className={'col-topic'}>{source.topic}</td>
+              <td className={'col-link'}>{source.link}</td>
+              <td className={'col-summary'}>{source.summary}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 
-export default Graph;
+export default sourceGraph;
