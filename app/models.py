@@ -1,6 +1,7 @@
 from app import db
 
 class Database(db.Model):
+    __tablename__ = 'scrapy_database'
     id = db.Column(db.Integer, primary_key=True)  # Add a primary key column
     topic = db.Column(db.String(200), unique=False, nullable=False)
     link = db.Column(db.String(200), unique=False, nullable=False)

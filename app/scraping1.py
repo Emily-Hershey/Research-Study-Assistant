@@ -5,14 +5,7 @@ import pandas as pd
 import requests 
 import json
 from bs4 import BeautifulSoup 
-from scrapy.crawler import CrawlerRunner
-from scrapy.settings import Settings
-
-from scrapy.utils.project import get_project_settings
-crawler_settings = get_project_settings()
-scrape_in_progress = False
-scrape_complete = False
-from twisted.internet import reactor, defer
+import subprocess
 
 
 
@@ -25,11 +18,11 @@ current_script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_script_dir, '..'))
 
 
-# Add the root directory to sys.path
+# Add the web_scrapy/web_scrapy directory to sys.path
 sys.path.insert(1, project_root)
 # Now you should be able to import Spider1
 from web_scrapy.web_scrapy.spiders.spider1 import Spider1
-import web_scrapy.web_scrapy.settings as my_settings  # Adjust this import as needed
+#import web_scrapy.web_scrapy.settings as my_settings  # Adjust this import as needed
 
 #crawler_settings.setmodule(my_settings)
 '''from PRACTICE_QUESTIONS_BOT_1.web_scrapy.web_scrapy.spiders.spider1 import Spider1 
@@ -53,7 +46,7 @@ from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 
 def run_spider(topic):
     params = {
-        'api_key':'MYSTERY'
+        'api_key':'C7568B51036E41BCB8D7C4FCBD3D27F7',
         'q':topic,
         'engine':'google',
         'hl':'en',
@@ -69,27 +62,21 @@ def run_spider(topic):
     url_list = []
     url_list.append("https://en.wikipedia.org/wiki/American_Revolution")
     
-    crawler_settings = Settings()
-    crawler_settings.setmodule(my_settings)
-    crawl_runner = CrawlerRunner(settings=crawler_settings)      # requires the Twisted reactor to run
+    spider_name = "web_scrapy"
 
-    global scrape_in_progress
-    global scrape_complete
+    # Construct the base command
+    command = ['scrapy', 'crawl', spider_name]
 
-    if not scrape_in_progress:
-        scrape_in_progress = True
-        eventual = crawl_runner.crawl(Spider1, start_urls=url_list, topic=topic)
-        eventual.addCallback(finished_scrape)
-        return eventual
-    elif scrape_complete:
-        return defer.succeed('SCRAPE COMPLETE')
-    return defer.succeed('SCRAPE IN PROGRESS')
+    # Add start_urls as individual -a arguments
+    for url in url_list:
+        command.extend(['-a', f'start_urls[]={url}'])
 
-def finished_scrape(null):
-    """
-    A callback that is fired after the scrape has completed.
-    Set a flag to allow display the results from /results
-    """
-    global scrape_complete
-    scrape_complete = True
+    # Add topic as an -a argument
+    command.extend(['-a', f'topic={topic}'])
+    # Start the subprocess
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Wait for the subprocess to finish (optional)
+    process.wait()
+   
 

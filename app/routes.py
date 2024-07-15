@@ -1,8 +1,26 @@
+import sys
+import os
+import asyncio
+from twisted.internet import asyncioreactor
+
+# Set the event loop policy to SelectorEventLoop for Windows
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+# Install the asyncio reactor
+asyncioreactor.install()
+
+
+
 from flask import jsonify, request
 from app import app, db
 from models import Database
 from flask_cors import CORS
+from scraping import run_spider
 
+from twisted.internet import reactor, defer
+from scraping import run_spider
+import threading
 
 
 '''
@@ -37,22 +55,32 @@ def update_database():
             except IntegrityError:
                 db.session.rollback()
 '''   
-        
+
 @app.route("/", methods=['GET'])
-def display_page(): 
-    print("FEFE")
-    # test   
-    user_text = "Hello I am user and I like to text"
-    Database.insert_data('user-input', 'user-input-link', user_text, '')
-    Database.insert_data('user-input2', 'user-input2-link', "babppsk", '')
-    
-    # test end
-    database = Database.query.all()  # Gives us a list of all the rows in the Database database as Python objects
-    '''for item in database:
-        print(f"ID: {item.id}, Topic: {item.topic}, Link: {item.link}, Text: {item.text}, Summary: {item.summary}")
-    '''
-    json_database = list(map(lambda x: x.to_json(), database))  # converts Python objects into JSON
-    return jsonify({"database": json_database})  # returns JSON object under the 'database' key in the JSON library
+def search_button(): 
+
+    @defer.inlineCallbacks
+    def run_scraping_and_return_results():
+        #search = request.json.get('topic') # will need to implement this feature later where the topic is determined by user input
+        search_term = 'search'
+        yield run_spider(search_term)
+        
+        # Now that the spider has finished, update the database
+        database = Database.query.all()  # Gives us a list of all the rows in the Database database as Python objects
+        for item in database:
+            print(f"ID: {item.id}, Topic: {item.topic}, Link: {item.link}")
+        if not database:
+            print("\n\nempty\n\n")
+        json_database = list(map(lambda x: x.to_json(), database))  # converts Python objects into JSON
+        response = jsonify({"database": json_database})  # returns JSON object under the 'database' key in the JSON library
+        defer.returnValue(response)
+
+    # Run the scraping and result collection in the Twisted reactor
+    d = run_scraping_and_return_results()
+
+    # Wait for the Deferred to complete and get the result
+    response = d.result
+    return response
 
 
 
@@ -87,7 +115,20 @@ def get_data():
 ''' return f"Hello, {escape(name)}!"'''
 
 if __name__ == '__main__':
-    with app.app_context():
-        Database.reset_database()  # Reset the database
+      # Reset the database
+    from sys import stdout
+    from twisted.logger import globalLogBeginner, textFileLogObserver
+    from twisted.web import server, wsgi
+    from twisted.internet import endpoints, reactor
 
-    app.run(debug=True)
+    # start the logger
+    globalLogBeginner.beginLoggingTo([textFileLogObserver(stdout)])
+
+    # start the WSGI server
+    root_resource = wsgi.WSGIResource(reactor, reactor.getThreadPool(), app)
+    factory = server.Site(root_resource)
+    http_server = endpoints.TCP4ServerEndpoint(reactor, 9000)
+    http_server.listen(factory)
+
+    # start event loop
+    reactor.run()
