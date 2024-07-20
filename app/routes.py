@@ -12,13 +12,18 @@ asyncioreactor.install()
 
 
 
-from flask import jsonify, request
+from flask import jsonify, request, session
+from sqlalchemy.exc import IntegrityError
+
 from app import app, db
 from models import Database
 from flask_cors import CORS
 from scraping import run_spider
 
+from flask_twisted import Twisted
 from twisted.internet import reactor, defer
+from twisted.internet.defer import inlineCallbacks, returnValue
+
 from scraping import run_spider
 import threading
 
@@ -56,32 +61,50 @@ def update_database():
                 db.session.rollback()
 '''   
 
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['GET', 'POST'])
 def search_button(): 
+    global search_term
+    if request.method == 'POST':
+        print("search received")
+        data = request.get_json()
+        search_term = data.get('search')
+        input_box = data.get('input_box')
+        if search_term:
+            run_spider(search_term)
+            print("Finished scraping mode")
+            return "Search Received"
+        elif input_box:
+            new_entry = Database(topic='user-input', link='user-input', text=input_box, summary='')
+            try:
+                db.session.add(new_entry)
+                db.session.commit()
+                return "Input Received"
 
-    @defer.inlineCallbacks
-    def run_scraping_and_return_results():
-        #search = request.json.get('topic') # will need to implement this feature later where the topic is determined by user input
-        search_term = 'search'
-        yield run_spider(search_term)
-        
-        # Now that the spider has finished, update the database
+            except IntegrityError:
+                db.session.rollback()
+                return "Error adding input to database"
+        else:
+            return "No search performed"
+    else:
+        # Handle GET request for status or other purposes  
+            
+        # update the database
         database = Database.query.all()  # Gives us a list of all the rows in the Database database as Python objects
         for item in database:
             print(f"ID: {item.id}, Topic: {item.topic}, Link: {item.link}")
         if not database:
             print("\n\nempty\n\n")
         json_database = list(map(lambda x: x.to_json(), database))  # converts Python objects into JSON
+        print("1")
         response = jsonify({"database": json_database})  # returns JSON object under the 'database' key in the JSON library
-        defer.returnValue(response)
-
-    # Run the scraping and result collection in the Twisted reactor
-    d = run_scraping_and_return_results()
-
-    # Wait for the Deferred to complete and get the result
-    response = d.result
-    return response
-
+        print("2")
+        return response 
+        
+        '''
+        print("4")
+        # Wait for the Deferred to complete and get the result
+        d.addCallback(lambda result: (print("5"), result))            
+        return d'''
 
 
 @app.route('/chatbot')
@@ -115,7 +138,8 @@ def get_data():
 ''' return f"Hello, {escape(name)}!"'''
 
 if __name__ == '__main__':
-      # Reset the database
+    with app.app_context():
+        Database.reset_database()  # Reset the database
     from sys import stdout
     from twisted.logger import globalLogBeginner, textFileLogObserver
     from twisted.web import server, wsgi
