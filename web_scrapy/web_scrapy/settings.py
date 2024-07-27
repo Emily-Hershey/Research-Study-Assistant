@@ -9,14 +9,25 @@
 
 BOT_NAME = "web_scrapy"
 
-SPIDER_MODULES = ["web_scrapy.spiders"]
-NEWSPIDER_MODULE = "web_scrapy.spiders"
+SPIDER_MODULES = ['web_scrapy.web_scrapy.spiders']
+NEWSPIDER_MODULE = 'web_scrapy.web_scrapy.spiders'
 
 # Enable pipeline to Flask app
 ITEM_PIPELINES = {
-   'web_scrapy.pipelines.WebScrapyPipeline': 300,
+   'web_scrapy.web_scrapy.pipelines.WebScrapyPipeline': 300,
 }
 
+DATABASE_URL = 'sqlite:///C:/Users/hersh/Practice-Questions-Bot-1/app/database.db'
+
+DATABASE = {
+    'drivername': 'sqlite',
+    'db': 'database',
+    'host': 'localhost',
+    'port': '9000',
+    # 'username': 'YOUR_USERNAME',
+    # 'password': 'YOUR_PASSWORD',
+    'database': 'database.sqlite'
+}
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "web_scrapy (+http://www.yourdomain.com)"
 

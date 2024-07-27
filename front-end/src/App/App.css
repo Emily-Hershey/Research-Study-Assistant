@@ -35,7 +35,6 @@ html, body {
   background-color: #282c34;
   color: #fff;
   align-items: center;
-  justify-content: center;
   flex-grow: 1;
   height: 100%;
   position: relative; /* Ensure relative positioning for absolute children */
@@ -90,11 +89,12 @@ html, body {
 }
 
 .additional-content {
-  margin-top: 20px; /* Space below the moved elements */
+  position: absolute;
+  margin-top: 80px; /* Space below the moved elements */
   width: 100%; /* Ensure the content takes full width */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
 }
 
 .table-container {
@@ -125,6 +125,7 @@ button {
   border: 1px solid #ccc;
   cursor: pointer;
 }
+
 
 button:hover {
   background-image: linear-gradient(45deg, #fba9f7 0%, #FFC9FC 100%);

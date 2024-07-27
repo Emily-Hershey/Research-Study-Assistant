@@ -50,24 +50,22 @@ from transformers import pipeline
 
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 
-
+'''
+need to handle when topic is empty
+'''
 def run_spider(topic):
     params = {
-        'api_key':'MYSTERY'
+        'api_key':'key',
         'q':topic,
         'engine':'google',
         'hl':'en',
     }
-    '''
     api_result = requests.get('https://api.scaleserp.com/search', params)
     response_data = api_result.json()
     url_list = []
     for item in response_data["organic_results"]:
         URL = item['link'] 
         url_list.append(URL)
-    '''
-    url_list = []
-    url_list.append("https://en.wikipedia.org/wiki/American_Revolution")
     
     crawler_settings = Settings()
     crawler_settings.setmodule(my_settings)

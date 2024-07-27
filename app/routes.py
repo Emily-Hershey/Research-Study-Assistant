@@ -19,6 +19,7 @@ from app import app, db
 from models import Database
 from flask_cors import CORS
 from scraping import run_spider
+from question_answering import run_model_on_data
 
 from flask_twisted import Twisted
 from twisted.internet import reactor, defer
@@ -90,14 +91,14 @@ def search_button():
             
         # update the database
         database = Database.query.all()  # Gives us a list of all the rows in the Database database as Python objects
-        for item in database:
-            print(f"ID: {item.id}, Topic: {item.topic}, Link: {item.link}")
+        #for item in database:
+            #print(f"ID: {item.id}, Topic: {item.topic}, Link: {item.link}")
         if not database:
             print("\n\nempty\n\n")
         json_database = list(map(lambda x: x.to_json(), database))  # converts Python objects into JSON
-        print("1")
+        #print("1")
         response = jsonify({"database": json_database})  # returns JSON object under the 'database' key in the JSON library
-        print("2")
+        #print("2")
         return response 
         
         '''
@@ -107,15 +108,22 @@ def search_button():
         return d'''
 
 
-@app.route('/chatbot')
+@app.route('/chatbot', methods=['GET', 'POST'])
 def chatbot():
-        '''elif action == 'qa':
-            question = data.get('content')
+    global answer
+    if request.method == 'POST':
+        data = request.get_json()
+        question = data.get('question')
+        if len(question) > 10:
             answer = run_model_on_data(question)
-            return jsonify({"answer": answer})
-
+            if not answer:
+                return ("Invalid Question")
         else:
-            return jsonify({"error": "Invalid action"})'''
+            return ("Question must contain at least 10 characters")
+        return ("Action Completed")
+    else:
+        #print("\n\n\nAnswer: ", answer)
+        return jsonify({"answer": answer})
 
 '''
 class Data(db.Model):
@@ -138,8 +146,8 @@ def get_data():
 ''' return f"Hello, {escape(name)}!"'''
 
 if __name__ == '__main__':
-    with app.app_context():
-        Database.reset_database()  # Reset the database
+    #with app.app_context():
+        #Database.reset_database()  # Reset the database
     from sys import stdout
     from twisted.logger import globalLogBeginner, textFileLogObserver
     from twisted.web import server, wsgi

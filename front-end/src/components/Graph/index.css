@@ -38,7 +38,7 @@
 }
 
 .graph td {
-  width: 200px;
+  width: 400px;
 }
 
 /* Custom heights for different columns */
@@ -51,7 +51,7 @@
 }
 
 .col-summary {
-  height: 250px;
+  height: 330px;
 }
 
 .graph thead th {
@@ -62,4 +62,17 @@
 .graph tbody td {
   background-color: #FFDEFD;
   color: #5a1e58;
+}
+
+.graph p {
+  background-color: #282c34;
+  color: #FFDEFD;
+
+  padding: 7px;
+  border: 2px dashed #FFC9FC;
+}
+
+.graph textarea {
+  padding: 5px;
+
 }
