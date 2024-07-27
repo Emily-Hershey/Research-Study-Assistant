@@ -1,2 +1,2 @@
 # Practice-Questions-Bot
-AI model that generates practice questions based on user-entered pdf note-sheets
+Full-stack website intended for research and study assistance. Users can create custom chatbots and view previews of websites.
