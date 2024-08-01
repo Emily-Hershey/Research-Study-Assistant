@@ -39,5 +39,5 @@ Python routes.py</code></pre></ol>
       <li>Run the Frontend</li> 
       <pre><code>npm start</code></pre>
       <li>Open "http://localhost:3000/" in your browser.</li></ol>
-<p>Everything should run smoothly from here. If not, check that all dependencies are installed and updated.</p>
+  <h3>Everything should run smoothly from here. If not, check that all dependencies are installed and updated.</h3>
 
