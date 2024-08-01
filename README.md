@@ -17,23 +17,24 @@ Website intended for research and study assistance. Users can create custom chat
   <pre><code>git clone https://github.com/Emily-Hershey/Practice-Questions-Bot.git
 cd Practice-Questions-Bot</code></pre>
   <li>Create API Keys</li> 
-    <li>The API keys provided are placeholders and will not work. Navigate to line 21 of app/question_answering.py. You will need to create and insert your own OpenAI API key. Navigate to line 34 of app/scraping.py. You will need to create and insert your own SerpAPI key.</li>
+    <ol style="list-style-type: lower-alpha><li>The API keys provided are placeholders and will not work. Navigate to line 21 of app/question_answering.py. You will need to create and insert your own OpenAI API key. </li>
+    <li>Navigate to line 34 of app/scraping.py. You will need to create and insert your own SerpAPI key.</li></ol>
   <li>Set Up the Backend (Flask)</li>
-    <li>Create a Virtual Environment</li> 
+    <ol style="list-style-type: lower-alpha><li>Create a Virtual Environment</li>
     <pre><code>python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate</code></pre>
     <li>Install Backend Dependencies</li> 
     <pre><code>pip install -r requirements.txt</code></pre>
     <li>Run the Backend</li> 
     <pre><code>cd app
-Python routes.py</code></pre>
+Python routes.py</code></pre></ol>
   <li>Set Up the Frontend (React)</li>
-    <li>In Another Terminal, Navigate to the React Directory</li> 
+    <ol style="list-style-type: lower-alpha><li>In Another Terminal, Navigate to the React Directory</li> 
     <pre><code>cd front-end</code></pre>
     <li>Install Frontend Dependencies</li>  
     <pre><code>npm install</code></pre>
     <li>Run the Frontend</li> 
     <pre><code>npm start</code></pre>
-    <li>Open "http://localhost:3000/" in your browser.</li>
+    <li>Open "http://localhost:3000/" in your browser.</li></ol>
 <p>Everything should run smoothly from here. If not, check that all dependencies are installed and updated.</p>
 
