@@ -1,10 +1,6 @@
 import sys
-import serpapi
 import os
-import pandas as pd
 import requests 
-import json
-from bs4 import BeautifulSoup 
 from scrapy.crawler import CrawlerRunner
 from scrapy.settings import Settings
 
@@ -12,13 +8,11 @@ from scrapy.utils.project import get_project_settings
 crawler_settings = get_project_settings()
 scrape_in_progress = False
 scrape_complete = False
-from twisted.internet import reactor, defer
+from twisted.internet import defer
 
 
 
 '''The below code allows us to import Spider1, despite it not being in the current directory'''
-
-#sys.path.append('C:/Users/hersh/Practice-Questions-Bot-1/web_scrapy/web_scrapy')
 
 # Determine the project root dynamically
 current_script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -31,24 +25,6 @@ sys.path.insert(1, project_root)
 from web_scrapy.web_scrapy.spiders.spider1 import Spider1
 import web_scrapy.web_scrapy.settings as my_settings  # Adjust this import as needed
 
-#crawler_settings.setmodule(my_settings)
-'''from PRACTICE_QUESTIONS_BOT_1.web_scrapy.web_scrapy.spiders.spider1 import Spider1 
-from PRACTICE_QUESTIONS_BOT_1.web_scrapy.web_scrapy import settings as my_settings 
-'''
-
-# Rest of your code
-
-
-
-
-from dotenv import load_dotenv
-import sqlite3
-
-#for summarizing model
-import torch
-from transformers import pipeline 
-
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 
 '''
 need to handle when topic is empty

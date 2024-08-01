@@ -62,19 +62,31 @@ def update_database():
                 db.session.rollback()
 '''   
 
+user_input_and_search_history = []
+
 @app.route("/", methods=['GET', 'POST'])
 def search_button(): 
     global search_term
+    global user_input_and_search_history
     if request.method == 'POST':
         print("search received")
         data = request.get_json()
         search_term = data.get('search')
         input_box = data.get('input_box')
         if search_term:
+            if search_term in user_input_and_search_history:
+                return "REPEAT"
+            else:
+                user_input_and_search_history.append(search_term)
             run_spider(search_term)
             print("Finished scraping mode")
             return "Search Received"
         elif input_box:
+            print(user_input_and_search_history)
+            if input_box in user_input_and_search_history:
+                return "REPEAT"
+            else:
+                user_input_and_search_history.append(input_box)
             new_entry = Database(topic='user-input', link='user-input', text=input_box, summary='')
             try:
                 db.session.add(new_entry)
@@ -146,8 +158,8 @@ def get_data():
 ''' return f"Hello, {escape(name)}!"'''
 
 if __name__ == '__main__':
-    #with app.app_context():
-        #Database.reset_database()  # Reset the database
+    with app.app_context():
+        Database.reset_database()  # Reset the database
     from sys import stdout
     from twisted.logger import globalLogBeginner, textFileLogObserver
     from twisted.web import server, wsgi

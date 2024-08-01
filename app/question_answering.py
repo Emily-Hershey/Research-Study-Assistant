@@ -13,7 +13,7 @@ def run_model_on_data(question):
     for row in database:
         if row.topic == "user-input":
             information_to_add += row.text + "\n"
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding="utf-8") as file:
         file.write(information_to_add)
 
     my_api_key = os.getenv('OPENAI_API_KEY')
